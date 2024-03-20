@@ -599,15 +599,19 @@ namespace PauseInMultiplayer
             if (shouldPauseNow)
             {
                 //set temporary duration locks if it has just become paused and/or update Duration if new food is consumed during pause
-                if (Game1.buffsDisplay.food != null && Game1.buffsDisplay.food.millisecondsDuration > foodDuration)
-                    foodDuration = Game1.buffsDisplay.food.millisecondsDuration;
-                if (Game1.buffsDisplay.drink != null && Game1.buffsDisplay.drink.millisecondsDuration > drinkDuration)
-                    drinkDuration = Game1.buffsDisplay.drink.millisecondsDuration;
-
-                if (Game1.buffsDisplay.food != null)
-                    Game1.buffsDisplay.food.millisecondsDuration = foodDuration;
-                if (Game1.buffsDisplay.drink != null)
-                    Game1.buffsDisplay.drink.millisecondsDuration = drinkDuration;
+                foreach (KeyValuePair<string, Buff> buff in Game1.player.buffs.AppliedBuffs){
+                    if (buff.Value.source == "food" && buff.Value.millisecondsDuration > foodDuration)
+                        foodDuration = buff.Value.millisecondsDuration;
+                    if (buff.Value.source == "drink" && buff.Value.millisecondsDuration > drinkDuration)
+                        drinkDuration = buff.Value.millisecondsDuration;
+                }
+                
+                foreach (KeyValuePair<string, Buff> buff in Game1.player.buffs.AppliedBuffs){
+                    if (buff.Value.source == "food")
+                        buff.Value.millisecondsDuration = foodDuration;
+                    if (buff.Value.source == "drink")
+                        buff.Value.millisecondsDuration = drinkDuration;
+                }
 
                 if (!lockMonsters) goto endHealthLogic;
                 //health lock
