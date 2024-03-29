@@ -16,10 +16,8 @@ namespace PauseInMultiplayer
 
         Dictionary<long, bool> eventStatus;
         public bool lastEventCheck = false;
-        
+
         int timeInterval = -100;
-        int foodDuration = -100;
-        int drinkDuration = -100;
 
         string pauseTime = "false";
         IDictionary<long, string> pauseTimeAll;
@@ -33,7 +31,6 @@ namespace PauseInMultiplayer
         bool shouldPauseLast = false;
         string inSkullLast = "false";
 
-
         bool extraTimeAdded = false;
 
         int healthLock = -100;
@@ -44,8 +41,10 @@ namespace PauseInMultiplayer
         IDictionary<long, bool> votePauseAll;
 
         bool pauseOverride = false;
-        
+
         ModConfig config;
+
+        Dictionary<string, int> buffDurations = new Dictionary<string, int>();
 
         public override void Entry(IModHelper helper)
         {
@@ -88,7 +87,7 @@ namespace PauseInMultiplayer
             );
 
             configMenu.AddBoolOption(
-                mod:this.ModManifest,
+                mod: this.ModManifest,
                 name: () => "Show X while paused",
                 tooltip: () => "Toggles whether or not to display an X over the clock while paused.",
                 getValue: () => this.config.ShowPauseX,
@@ -187,12 +186,12 @@ namespace PauseInMultiplayer
         {
             if (!Context.IsWorldReady) return;
 
-            if(e.Button == config.VotePauseHotkey)
+            if (e.Button == config.VotePauseHotkey)
             {
                 votePauseToggle();
             }
 
-            else if(e.Button == config.PauseOverrideHotkey && Context.IsMainPlayer && config.EnablePauseOverride)
+            else if (e.Button == config.PauseOverrideHotkey && Context.IsMainPlayer && config.EnablePauseOverride)
             {
                 pauseOverride = !pauseOverride;
 
@@ -250,7 +249,7 @@ namespace PauseInMultiplayer
                 votePauseAll.Remove(e.Peer.PlayerID);
                 eventStatus.Remove(e.Peer.PlayerID);
             }
-                
+
         }
 
         private void Multiplayer_PeerConnected(object? sender, StardewModdingAPI.Events.PeerConnectedEventArgs e)
@@ -263,10 +262,10 @@ namespace PauseInMultiplayer
                 eventStatus[e.Peer.PlayerID] = false;
 
                 //send current pause state
-                this.Helper.Multiplayer.SendMessage(shouldPauseLast ? "true" : "false", "pauseCommand", new[] { this.ModManifest.UniqueID }, new[] {e.Peer.PlayerID});
+                this.Helper.Multiplayer.SendMessage(shouldPauseLast ? "true" : "false", "pauseCommand", new[] { this.ModManifest.UniqueID }, new[] { e.Peer.PlayerID });
 
                 //send message denoting whether or not monsters will be locked
-                this.Helper.Multiplayer.SendMessage(lockMonsters ? "true" : "false", "lockMonsters", modIDs: new[] {this.ModManifest.UniqueID}, playerIDs: new[] {e.Peer.PlayerID});
+                this.Helper.Multiplayer.SendMessage(lockMonsters ? "true" : "false", "lockMonsters", modIDs: new[] { this.ModManifest.UniqueID }, playerIDs: new[] { e.Peer.PlayerID });
 
 
                 //check for version match
@@ -281,7 +280,7 @@ namespace PauseInMultiplayer
                 }
 
                 //sets the joined player's vote to pause as the host's if enabled
-                if(this.config.JoinVoteMatchesHost && this.config.EnableVotePause)
+                if (this.config.JoinVoteMatchesHost && this.config.EnableVotePause)
                 {
                     votePauseAll[e.Peer.PlayerID] = votePause;
 
@@ -307,21 +306,19 @@ namespace PauseInMultiplayer
                 }
 
             }
-                
-        }
 
-        
+        }
 
         private void Multiplayer_ModMessageReceived(object? sender, StardewModdingAPI.Events.ModMessageReceivedEventArgs e)
         {
-            if(e.FromModID == this.ModManifest.UniqueID && e.Type == "info")
+            if (e.FromModID == this.ModManifest.UniqueID && e.Type == "info")
             {
-                if(config.DisplayVotePauseMessages)
+                if (config.DisplayVotePauseMessages)
                     Game1.chatBox.addInfoMessage(e.ReadAs<string>());
-               
+
                 return;
             }
-            
+
             if (Context.IsMainPlayer)
             {
                 if (e.FromModID == this.ModManifest.UniqueID)
@@ -361,11 +358,11 @@ namespace PauseInMultiplayer
                 {
                     pauseCommand = e.ReadAs<string>();
                 }
-                else if(e.FromModID == this.ModManifest.UniqueID && e.Type == "lockMonsters")
+                else if (e.FromModID == this.ModManifest.UniqueID && e.Type == "lockMonsters")
                 {
                     this.lockMonsters = e.ReadAs<string>() == "true" ? true : false;
                 }
-                else if(e.FromModID == this.ModManifest.UniqueID && e.Type == "setVotePause")
+                else if (e.FromModID == this.ModManifest.UniqueID && e.Type == "setVotePause")
                 {
                     this.votePause = e.ReadAs<bool>();
                 }
@@ -450,7 +447,7 @@ namespace PauseInMultiplayer
             else
                 inSkull = "false";
 
-            if(inSkull != inSkullLast)
+            if (inSkull != inSkullLast)
             {
                 if (Context.IsMainPlayer)
                     inSkullAll[Game1.player.UniqueMultiplayerID] = inSkull;
@@ -463,7 +460,7 @@ namespace PauseInMultiplayer
             //apply the logic to remove 2000 from the time interval if everyone is in the skull cavern and this hasn't been done yet per this 10 minute day period
             if (Context.IsMainPlayer && Game1.gameTimeInterval > 6000 && allInSkull())
             {
-                if(!extraTimeAdded)
+                if (!extraTimeAdded)
                 {
                     extraTimeAdded = true;
                     Game1.gameTimeInterval -= 2000;
@@ -479,18 +476,18 @@ namespace PauseInMultiplayer
             if (Context.IsMainPlayer)
             {
                 //host
-                if(pauseTime != pauseTime2)
+                if (pauseTime != pauseTime2)
                 {
                     pauseTime = pauseTime2;
                     pauseTimeAll[Game1.player.UniqueMultiplayerID] = pauseTime;
                 }
-                
+
             }
-                
+
             else
             {
                 //client
-                if(pauseTime != pauseTime2)
+                if (pauseTime != pauseTime2)
                 {
                     pauseTime = pauseTime2;
                     this.Helper.Multiplayer.SendMessage(pauseTime, "pauseTime", modIDs: new[] { this.ModManifest.UniqueID }, playerIDs: new[] { Game1.MasterPlayer.UniqueMultiplayerID });
@@ -548,9 +545,7 @@ namespace PauseInMultiplayer
                             }
                         }
                     }
-                    endMonsterLogic:;
-
-
+                endMonsterLogic:;
 
                 }
                 else
@@ -569,9 +564,9 @@ namespace PauseInMultiplayer
 
                 }
 
-                if(shouldPauseNow != shouldPauseLast)
+                if (shouldPauseNow != shouldPauseLast)
                     this.Helper.Multiplayer.SendMessage(shouldPauseNow ? "true" : "false", "pauseCommand", new[] { this.ModManifest.UniqueID });
-                
+
                 shouldPauseLast = shouldPauseNow;
             }
 
@@ -588,7 +583,7 @@ namespace PauseInMultiplayer
                         Game1.player.health = Math.Max(1, Game1.player.health - num * 3);
                         healthLock = Game1.player.health;
                     }
-                        
+
                 }
 
                 lastSkullLevel = (Game1.player.currentLocation as StardewValley.Locations.MineShaft).mineLevel;
@@ -599,18 +594,17 @@ namespace PauseInMultiplayer
             if (shouldPauseNow)
             {
                 //set temporary duration locks if it has just become paused and/or update Duration if new food is consumed during pause
-                foreach (KeyValuePair<string, Buff> buff in Game1.player.buffs.AppliedBuffs){
-                    if (buff.Value.source == "food" && buff.Value.millisecondsDuration > foodDuration)
-                        foodDuration = buff.Value.millisecondsDuration;
-                    if (buff.Value.source == "drink" && buff.Value.millisecondsDuration > drinkDuration)
-                        drinkDuration = buff.Value.millisecondsDuration;
-                }
-                
-                foreach (KeyValuePair<string, Buff> buff in Game1.player.buffs.AppliedBuffs){
-                    if (buff.Value.source == "food")
-                        buff.Value.millisecondsDuration = foodDuration;
-                    if (buff.Value.source == "drink")
-                        buff.Value.millisecondsDuration = drinkDuration;
+                foreach (KeyValuePair<string, Buff> buff in Game1.player.buffs.AppliedBuffs)
+                {
+                    if (!buffDurations.ContainsKey(buff.Key))
+                        buffDurations.Add(buff.Key, buff.Value.millisecondsDuration);
+                    else
+                    {
+                        if (buff.Value.millisecondsDuration < buffDurations[buff.Key])
+                        {
+                            buff.Value.millisecondsDuration = buffDurations[buff.Key];
+                        }
+                    }
                 }
 
                 if (!lockMonsters) goto endHealthLogic;
@@ -632,12 +626,11 @@ namespace PauseInMultiplayer
             }
             else
             {
-                foodDuration = -100;
-                drinkDuration = -100;
+                buffDurations.Clear();
 
                 healthLock = -100;
 
-                if(Game1.player.temporaryInvincibilityTimer < -100000000)
+                if (Game1.player.temporaryInvincibilityTimer < -100000000)
                 {
                     Game1.player.temporaryInvincibilityTimer = 0;
                     Game1.player.currentTemporaryInvincibilityDuration = 0;
@@ -657,8 +650,8 @@ namespace PauseInMultiplayer
 
                 votePauseAll[Game1.player.UniqueMultiplayerID] = votePause;
                 int votedYes = 0;
-                foreach(bool vote in votePauseAll.Values)
-                    if(vote) votedYes++;
+                foreach (bool vote in votePauseAll.Values)
+                    if (vote) votedYes++;
 
                 if (votePause)
                 {
@@ -688,7 +681,7 @@ namespace PauseInMultiplayer
                         return true;
 
                     //votes
-                    if(config.EnableVotePause)
+                    if (config.EnableVotePause)
                     {
                         bool votedPause = true;
                         foreach (bool vote in votePauseAll.Values)
@@ -699,7 +692,7 @@ namespace PauseInMultiplayer
                     }
 
                     //events
-                    if(config.AnyCutscenePauses)
+                    if (config.AnyCutscenePauses)
                     {
                         foreach (bool up in eventStatus.Values)
                             if (up)
@@ -723,7 +716,7 @@ namespace PauseInMultiplayer
                 pauseCommand = "false";
                 return false;
             }
-            
+
 
         }
 
@@ -762,14 +755,14 @@ namespace PauseInMultiplayer
     class ModConfig
     {
         public bool ShowPauseX { get; set; } = true;
-        
+
         public bool FixSkullTime { get; set; } = true;
 
         public bool DisableSkullShaftFix { get; set; } = false;
         public bool LockMonsters { get; set; } = true;
 
         public bool AnyCutscenePauses { get; set; } = false;
-       
+
         public bool EnableVotePause { get; set; } = true;
 
         public bool JoinVoteMatchesHost { get; set; } = true;
@@ -778,7 +771,7 @@ namespace PauseInMultiplayer
 
         public bool EnablePauseOverride { get; set; } = true;
 
-        public SButton PauseOverrideHotkey { get; set;} = SButton.Scroll;
+        public SButton PauseOverrideHotkey { get; set; } = SButton.Scroll;
 
         public bool DisplayVotePauseMessages { get; set; } = true;
     }
