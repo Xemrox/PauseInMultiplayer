@@ -6,8 +6,8 @@
     <ImplicitUsings>false</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AssemblyVersion>1.7.1</AssemblyVersion>
-    <FileVersion>1.7.1-unofficial.1-mishmash</FileVersion>
-    <Version>1.7.1-unofficial.1-mishmash</Version>
+    <FileVersion>1.7.1</FileVersion>
+    <Version>1.7.1</Version>
     <PackageReleaseNotes>any cutscene pause option added</PackageReleaseNotes>
   </PropertyGroup>
 
