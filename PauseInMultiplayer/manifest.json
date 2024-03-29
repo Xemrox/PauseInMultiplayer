@@ -1,9 +1,9 @@
 {
-  "Name": "Pause in Multiplayer",
-  "Author": "jorgamun",
-  "Version": "1.7.1-unofficial.2-mishmash",
-  "Description": "Pauses time in multiplayer when all connected players should have their time paused.",
-  "UniqueID": "jorgamun.PauseInMultiplayer",
+  "Name": "Pause in Multiplayer Revived",
+  "Author": "mishmaash",
+  "Version": "1.8.0",
+  "Description": "Pauses time in multiplayer when all connected players should have their time paused. Originally created by jorgamun.",
+  "UniqueID": "mishmaash.PauseInMultiplayer",
   "EntryDll": "PauseInMultiplayer.dll",
-  "UpdateKeys": ["Nexus:10328"]
+  "UpdateKeys": ["Nexus:21327"]
 }

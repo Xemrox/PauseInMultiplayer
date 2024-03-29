@@ -5,7 +5,7 @@
 
 This is a non-intrusive mod that pauses time in multiplayer games when all players meet the conditions that would pause time if they were in a single-player game. A few other mods exist on here with this functionality, but they had some bugs and lack of implementation that jorgamun wasn't happy with so jorgamun made this one.
 
-Forked from original creator's **jorgamun**'s mod, which can be found on [GitHub](https://github.com/jorgamun/PauseInMultiplayer) and [NexusMods](https://www.nexusmods.com/stardewvalley/mods/10328).
+[NexusMods](https://www.nexusmods.com/stardewvalley/mods/21327)
 
 ## Additional Features
 
@@ -66,3 +66,7 @@ This may be configured by manually editing the file or by using Generic Mod Conf
   "DisplayVotePauseMessages": true //change to false to disable showing vote messages
 }
 ```
+
+## Credits
+
+Forked from original creator's **jorgamun**'s mod, which can be found on [GitHub](https://github.com/jorgamun/PauseInMultiplayer) and [NexusMods](https://www.nexusmods.com/stardewvalley/mods/10328).
