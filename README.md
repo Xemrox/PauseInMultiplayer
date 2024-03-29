@@ -9,7 +9,7 @@ Forked from original creator's **jorgamun**'s mod, which can be found on [GitHub
 
 ## Additional Features
 
-* ~Stops food and drink buffs from ticking down while the game is paused.~ (Regression with 1.6 update, see [issue](https://github.com/mishagp/PauseInMultiplayer/issues/1))
+* Stops food and drink buffs from ticking down while the game is paused.
 * Locks monster positions and player health while paused.
 * Slows down clock time if all players are in the Skull Cavern as it does in single-player.
 * Displays a subtle X graphic over the game clock to better indicate when time is paused.
