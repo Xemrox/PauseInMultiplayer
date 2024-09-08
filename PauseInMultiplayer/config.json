@@ -9,5 +9,6 @@
   "VotePauseHotkey": "Pause",
   "EnablePauseOverride": true,
   "PauseOverrideHotkey": "Scroll",
-  "DisplayVotePauseMessages": true
+  "DisplayVotePauseMessages": true,
+  "DebugHotkey": "None"
 }
