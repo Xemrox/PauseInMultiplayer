@@ -9,4 +9,5 @@ internal static class NetworkConstants
     public const string InSkullCommand = "inSkull";
     public const string PauseTimeCommand = "pauseTime";
     public const string EventUpCommand = "eventUp";
+    public const string ChatInfoCommand = "info";
 }

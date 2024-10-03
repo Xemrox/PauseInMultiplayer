@@ -28,7 +28,7 @@ public sealed class PauseInMultiplayer : Mod
     {
         config = Helper.ReadConfig<ModConfig>();
 
-        bool skullElevatorMod = Helper.ModRegistry.Get("SkullCavernElevator") != null;
+        bool skullElevatorMod = Helper.ModRegistry.Get("SkullCavernElevator") is not null;
         if (skullElevatorMod)
         {
             Monitor.Log("DisableSkullShaftFix set to true due to SkullCavernElevator mod.", LogLevel.Debug);
@@ -72,18 +72,6 @@ public sealed class PauseInMultiplayer : Mod
         else if (e.Button == config.PauseOverrideHotkey && config.EnablePauseOverride)
         {
             OverridePauseToggle();
-        }
-        else if (e.Button == config.DebugHotkey)
-        {
-            Game1.chatBox.addInfoMessage($"IsMainPlayer: {Context.IsMainPlayer}");
-            Game1.chatBox.addInfoMessage($"IsMultiplayer: {Context.IsMultiplayer}");
-            Game1.chatBox.addInfoMessage($"HasRemotePlayers: {Context.HasRemotePlayers}");
-            Game1.chatBox.addInfoMessage($"IsSplitScreen: {Context.IsSplitScreen}");
-            Game1.chatBox.addInfoMessage($"pauseTime: {ModState.Current.Pause} pauseTimeAll: {ModState.PauseAll}");
-            Game1.chatBox.addInfoMessage($"votePause: {ModState.Current.VotePause} votePauseAll: {ModState.VotePauseAll}");
-            Game1.chatBox.addInfoMessage($"inSkull: {ModState.Current.InSkull} inSkullAll: {ModState.InSkullAll}");
-            Game1.chatBox.addInfoMessage($"inEvent: {ModState.Current.InEvent} inEventAny: {ModState.InEventAny}");
-            Game1.chatBox.addInfoMessage($"pauseOverride: {ModState.Current.PauseOverride}");
         }
     }
 
@@ -166,7 +154,7 @@ public sealed class PauseInMultiplayer : Mod
             if (votePause)
             {
                 string message = $"{Game1.getFarmer(e.Peer.PlayerID).Name} joined with a vote to pause. ({ModState.PositiveVotes}/{ModState.TotalFarmers})";
-                Helper.Multiplayer.SendMessage(message, "info", new[] { ModManifest.UniqueID });
+                Helper.Multiplayer.SendMessage(message, NetworkConstants.ChatInfoCommand, new[] { ModManifest.UniqueID });
                 Game1.chatBox.addInfoMessage(message);
             }
             else
@@ -198,7 +186,7 @@ public sealed class PauseInMultiplayer : Mod
         if (e.FromModID != ModManifest.UniqueID)
             return;
 
-        if (e.Type == "info")
+        if (e.Type == NetworkConstants.ChatInfoCommand)
         {
             if (config.DisplayVotePauseMessages)
                 Game1.chatBox.addInfoMessage(e.ReadAs<string>());
@@ -252,14 +240,14 @@ public sealed class PauseInMultiplayer : Mod
 
             if (voteValue)
             {
-                string message = $"{Game1.player.Name}->{Game1.getFarmer(e.FromPlayerID).Name} voted to pause the game. ({ModState.PositiveVotes}/{ModState.TotalFarmers})";
-                Helper.Multiplayer.SendMessage(message, "info", new[] { ModManifest.UniqueID });
+                string message = $"{Game1.getFarmer(e.FromPlayerID).Name} voted to pause the game. ({ModState.PositiveVotes}/{ModState.TotalFarmers})";
+                Helper.Multiplayer.SendMessage(message, NetworkConstants.ChatInfoCommand, new[] { ModManifest.UniqueID });
                 Game1.chatBox.addInfoMessage(message);
             }
             else
             {
-                string message = $"{Game1.player.Name}->{Game1.getFarmer(e.FromPlayerID).Name} voted to unpause the game. ({ModState.PositiveVotes}/{ModState.TotalFarmers})";
-                Helper.Multiplayer.SendMessage(message, "info", new[] { ModManifest.UniqueID });
+                string message = $"{Game1.getFarmer(e.FromPlayerID).Name} voted to unpause the game. ({ModState.PositiveVotes}/{ModState.TotalFarmers})";
+                Helper.Multiplayer.SendMessage(message, NetworkConstants.ChatInfoCommand, new[] { ModManifest.UniqueID });
                 Game1.chatBox.addInfoMessage(message);
             }
         }
@@ -324,12 +312,12 @@ public sealed class PauseInMultiplayer : Mod
 
         if (ModState.Current.PauseOverride)
         {
-            Helper.Multiplayer.SendMessage("The host has paused via override.", "info", new[] { ModManifest.UniqueID });
+            Helper.Multiplayer.SendMessage("The host has paused via override.", NetworkConstants.ChatInfoCommand, new[] { ModManifest.UniqueID });
             Game1.chatBox.addInfoMessage("The host has paused via override.");
         }
         else
         {
-            Helper.Multiplayer.SendMessage("The host has unpaused their override.", "info", new[] { ModManifest.UniqueID });
+            Helper.Multiplayer.SendMessage("The host has unpaused their override.", NetworkConstants.ChatInfoCommand, new[] { ModManifest.UniqueID });
             Game1.chatBox.addInfoMessage("The host has unpaused their override.");
         }
     }
@@ -499,13 +487,13 @@ public sealed class PauseInMultiplayer : Mod
             if (votePause)
             {
                 string message = $"{Game1.player.Name} voted to pause the game. ({ModState.PositiveVotes}/{ModState.TotalFarmers})";
-                Helper.Multiplayer.SendMessage(message, "info", new[] { ModManifest.UniqueID });
+                Helper.Multiplayer.SendMessage(message, NetworkConstants.ChatInfoCommand, new[] { ModManifest.UniqueID });
                 Game1.chatBox.addInfoMessage(message);
             }
             else
             {
                 string message = $"{Game1.player.Name} voted to unpause the game. ({ModState.PositiveVotes}/{ModState.TotalFarmers})";
-                Helper.Multiplayer.SendMessage(message, "info", new[] { ModManifest.UniqueID });
+                Helper.Multiplayer.SendMessage(message, NetworkConstants.ChatInfoCommand, new[] { ModManifest.UniqueID });
                 Game1.chatBox.addInfoMessage(message);
             }
         }
