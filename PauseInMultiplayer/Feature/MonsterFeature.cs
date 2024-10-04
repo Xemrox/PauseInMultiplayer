@@ -32,6 +32,8 @@ internal static class MonsterFeature
                     if (!_monsterLocks.ContainsKey(monster))
                         _monsterLocks.Add(monster, monster.Position);
                     monster.Position = _monsterLocks[monster];
+                    monster.stunTime.Set(100);
+                    monster.movementPause = 100;
                 }
             }
         }
