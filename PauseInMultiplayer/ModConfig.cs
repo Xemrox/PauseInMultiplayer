@@ -15,5 +15,4 @@ internal sealed class ModConfig
     public bool DisplayVotePauseMessages { get; set; } = true;
     public SButton PauseOverrideHotkey { get; set; } = SButton.Scroll;
     public SButton VotePauseHotkey { get; set; } = SButton.Pause;
-    public SButton DebugHotkey { get; set; } = SButton.None;
 }

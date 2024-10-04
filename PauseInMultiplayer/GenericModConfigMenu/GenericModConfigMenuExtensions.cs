@@ -1,10 +1,7 @@
-﻿using PauseInMultiplayer;
-
+﻿using GenericModConfigMenu;
 using StardewModdingAPI;
 
-#pragma warning disable IDE0130 // Namespace does not match folder structure
-namespace GenericModConfigMenu;
-#pragma warning restore IDE0130 // Namespace does not match folder structure
+namespace PauseInMultiplayer.GenericModConfigMenu;
 
 internal static class GenericModConfigMenuExtensions
 {
@@ -53,14 +50,6 @@ internal static class GenericModConfigMenuExtensions
             tooltip: () => "Only set this to true if you have a specific reason to, such as using the Skull Cavern elevator mod.",
             getValue: () => config.DisableSkullShaftFix,
             setValue: value => config.DisableSkullShaftFix = value
-        );
-
-        configMenu.AddKeybind(
-            mod: modManifest,
-            name: () => "Debug Hotkey",
-            tooltip: () => "Set as a key that you won't use for other purposes.",
-            getValue: () => config.DebugHotkey,
-            setValue: value => config.DebugHotkey = value
         );
 
         configMenu.AddSectionTitle(
