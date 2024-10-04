@@ -411,6 +411,9 @@ public sealed class PauseInMultiplayer : Mod
     {
         bool inSkull = ModState.Current.InSkull;
 
+        if (!inSkull)
+            ModState.Current.LastSkullLevel = 121;
+
         //check if the player has jumped down a Skull Cavern Shaft
         if (config.DisableSkullShaftFix || !inSkull)
             return;
@@ -431,10 +434,8 @@ public sealed class PauseInMultiplayer : Mod
 
     private void CheckAndFixSkullLogic()
     {
-        //skip skull cavern fix logic if the main player has it disabled, or if is not multiplayer
+        //skip skull cavern fix logic if is not multiplayer
         if (!Game1.IsMultiplayer)
-            return;
-        if (Context.IsMainPlayer && !config.FixSkullTime)
             return;
 
         bool inSkull = false;
@@ -458,7 +459,8 @@ public sealed class PauseInMultiplayer : Mod
             }
         }
 
-        if (!Context.IsMainPlayer)
+        // skip skull time fix if the main player has it disabled
+        if (!Context.IsMainPlayer || (Context.IsMainPlayer && !config.FixSkullTime))
             return;
 
         //apply the logic to remove 2000 from the time interval if everyone is in the skull cavern and this hasn't been done yet per this 10 minute day period
@@ -542,8 +544,6 @@ public sealed class PauseInMultiplayer : Mod
             ModState.Current.PauseCommand = false;
             return false;
         }
-
-
     }
 
     private static Vector2 UpdatePosition()
